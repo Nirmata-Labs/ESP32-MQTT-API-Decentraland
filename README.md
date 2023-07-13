@@ -1,9 +1,8 @@
-# ESP32-MQTT-API
-ESP32 which publishes Sensordata from a DHT11, Rainsensor and Brightnesssensor via MQTT to Node Red. Node Red provides the data in form of an JSON-API. 
-
-# ESP32 Weather Toggle
+# ESP32 Decentraland Weather Toggle 
 
 This repository contains code for an ESP32 device that utilizes a rain sensor, brightness sensor, and DHT11 sensor to toggle the weather state of an object in a local decentraland instance. The ESP32 sends the sensor data via MQTT to an external server running Node-RED. Node-RED calculates the weather state based on the sensor values and provides the solution in the form of a JSON response via an HTTP GET request. The decentraland instance then makes an HTTP GET request to retrieve the weather state and toggles a cloud object accordingly.
+
+![Heavy Rain Scene](images/heavy rain.png)
 
 You can find the decentraland implementation here: [Decentraland Weather Simulation Repo](https://github.com/decentraland-scenes/Weather-simulation)
 
