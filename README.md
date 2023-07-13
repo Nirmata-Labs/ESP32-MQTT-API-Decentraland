@@ -5,6 +5,8 @@ ESP32 which publishes Sensordata from a DHT11, Rainsensor and Brightnesssensor v
 
 This repository contains code for an ESP32 device that utilizes a rain sensor, brightness sensor, and DHT11 sensor to toggle the weather state of an object in a local decentraland instance. The ESP32 sends the sensor data via MQTT to an external server running Node-RED. Node-RED calculates the weather state based on the sensor values and provides the solution in the form of a JSON response via an HTTP GET request. The decentraland instance then makes an HTTP GET request to retrieve the weather state and toggles a cloud object accordingly.
 
+You can find the decentraland implementation here: [Decentraland Weather Simulation Repo](https://github.com/decentraland-scenes/Weather-simulation)
+
 ## Setup and Usage
 
 1. Connect the ESP32 to the rain sensor, brightness sensor, and DHT11 sensor according to the pin configurations mentioned in the code.
@@ -21,17 +23,13 @@ This repository contains code for an ESP32 device that utilizes a rain sensor, b
 
 7. Modify the decentraland instance code to make an HTTP GET request to the Node-RED server and retrieve the weather state.
 
-8. Implement the logic in the decentraland instance to toggle the cloud object based on the received weather state.
-
-9. Run the decentraland instance and observe the cloud object's behavior as it reflects the calculated weather state.
 
 ## Repository Contents
 
-- `esp32_code.ino`: Arduino code for the ESP32 device, responsible for reading sensor data and sending it via MQTT.
+- `ESP32_MQTT.ino`: Arduino code for the ESP32 device, responsible for reading sensor data and sending it via MQTT.
 
-- `node_red_flow.json`: Node-RED flow configuration, defining the MQTT message handling and weather state calculation.
+- `flow.json`: Node-RED flow configuration, defining the MQTT message handling and weather state calculation.
 
-- `decentraland_instance_code.js`: Example code for the decentraland instance, making an HTTP GET request to retrieve the weather state and toggle the cloud object.
 
 ## License
 
