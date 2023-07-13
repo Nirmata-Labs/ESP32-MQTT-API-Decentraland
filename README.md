@@ -1,4 +1,4 @@
-# ESP32 Decentraland Weather Toggle 
+# IoT ESP32 Decentraland Weather Toggle 
 
 This repository contains code for an ESP32 device that utilizes a rain sensor, brightness sensor, and DHT11 sensor to toggle the weather state of an object in a local decentraland instance. The ESP32 sends the sensor data via MQTT to an external server running Node-RED. Node-RED calculates the weather state based on the sensor values and provides the solution in the form of a JSON response via an HTTP GET request. The decentraland instance then makes an HTTP GET request to retrieve the weather state and toggles a cloud object accordingly.
 
