@@ -1,0 +1,463 @@
+[
+    {
+        "id": "4343d893b4f47a33",
+        "type": "mqtt in",
+        "z": "9e07e09866673d2d",
+        "name": "",
+        "topic": "esp32/rain",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1e0568e53fb1348b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 180,
+        "wires": [
+            [
+                "5192255eadc75b56"
+            ]
+        ]
+    },
+    {
+        "id": "5fd7ad6a7a8daea6",
+        "type": "mqtt in",
+        "z": "9e07e09866673d2d",
+        "name": "",
+        "topic": "esp32/bright",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1e0568e53fb1348b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 220,
+        "wires": [
+            [
+                "0a193bb8bcdc5a2f"
+            ]
+        ]
+    },
+    {
+        "id": "0a193bb8bcdc5a2f",
+        "type": "function",
+        "z": "9e07e09866673d2d",
+        "name": "SET FLOWVARIABLE",
+        "func": "flow.set(\"bright\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 220,
+        "wires": [
+            [
+                "832f3993c58aa2b8"
+            ]
+        ]
+    },
+    {
+        "id": "5192255eadc75b56",
+        "type": "function",
+        "z": "9e07e09866673d2d",
+        "name": "SET FLOWVARIABLE",
+        "func": "flow.set(\"rain\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "832f3993c58aa2b8"
+            ]
+        ]
+    },
+    {
+        "id": "197bd87e52aae94c",
+        "type": "inject",
+        "z": "9e07e09866673d2d",
+        "name": "",
+        "props": [],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "89a5a525230479da"
+            ]
+        ]
+    },
+    {
+        "id": "89a5a525230479da",
+        "type": "function",
+        "z": "9e07e09866673d2d",
+        "name": "WEATHERSTATES",
+        "func": "var rain = flow.get(\"rain\");\nvar brightness = flow.get(\"brightness\");\nvar temperature = flow.get(\"temp\");\nvar weatherState;\n\nvar useFakeValues = true; // Check if fake values should be used\n\nif (useFakeValues === true) {\n    // Use fake weather states\n    weatherState = flow.get(\"fakeWeatherState\");\n} else {\n    // Use actual weather calculation\n    if (temperature < 4 && rain < 2000) {\n        weatherState = \"snow\";\n    } else if (rain < 2000) {\n        if (brightness < 1000) {\n            weatherState = \"thunder\";\n        } else {\n            weatherState = \"heavy rain\";\n        }\n    } else if (rain < 4000) {\n        weatherState = \"light rain\";\n    } else if (brightness < 2000) {\n        weatherState = \"cloudy\";\n    } else {\n        weatherState = \"sunny\";\n    }\n}\n\nflow.set(\"weatherState\", weatherState);\nmsg.payload = weatherState;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 320,
+        "wires": [
+            [
+                "470907c8019a2fb5"
+            ]
+        ]
+    },
+    {
+        "id": "832f3993c58aa2b8",
+        "type": "debug",
+        "z": "9e07e09866673d2d",
+        "name": "debug 40",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "9b00ae02.3d5ef",
+        "type": "http in",
+        "z": "9e07e09866673d2d",
+        "name": "/current-weather",
+        "url": "/current-weather",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 420,
+        "wires": [
+            [
+                "7f3f4e586024cf59"
+            ]
+        ]
+    },
+    {
+        "id": "a3f85b55.c55a8",
+        "type": "http response",
+        "z": "9e07e09866673d2d",
+        "name": "XML Response",
+        "statusCode": "",
+        "headers": {},
+        "x": 640,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "7f3f4e586024cf59",
+        "type": "function",
+        "z": "9e07e09866673d2d",
+        "name": "return msg.payload to client",
+        "func": "msg.payload = {\"lat\":48.22,\"lon\":9.92,\"alt_m\":538,\"alt_ft\":1765.09,\"wx_desc\":flow.get(\"weatherState\"),\"wx_code\":29,\"wx_icon\":\"PartCloudRainThunderDay.gif\",\"temp_c\":25,\"temp_f\":77,\"feelslike_c\":25.17,\"feelslike_f\":77.3,\"humid_pct\":57,\"windspd_mph\":14.91,\"windspd_kmh\":24,\"windspd_kts\":12.96,\"windspd_ms\":6.67,\"winddir_deg\":230,\"winddir_compass\":\"SW\",\"cloudtotal_pct\":25,\"vis_km\":10,\"vis_mi\":6.21,\"vis_desc\":null,\"slp_mb\":1013.9,\"slp_in\":30.03,\"dewpoint_c\":15.91,\"dewpoint_f\":60.63};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 420,
+        "wires": [
+            [
+                "a3f85b55.c55a8"
+            ]
+        ]
+    },
+    {
+        "id": "470907c8019a2fb5",
+        "type": "debug",
+        "z": "9e07e09866673d2d",
+        "name": "debug 41",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "6ed92150ba554428",
+        "type": "mqtt in",
+        "z": "9e07e09866673d2d",
+        "name": "",
+        "topic": "esp32/temp",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1e0568e53fb1348b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "fd2289f198e055ae"
+            ]
+        ]
+    },
+    {
+        "id": "fd2289f198e055ae",
+        "type": "function",
+        "z": "9e07e09866673d2d",
+        "name": "SET FLOWVARIABLE",
+        "func": "flow.set(\"temp\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 140,
+        "wires": [
+            [
+                "832f3993c58aa2b8"
+            ]
+        ]
+    },
+    {
+        "id": "60b5aa216dbcf251",
+        "type": "comment",
+        "z": "9e07e09866673d2d",
+        "name": "Sensorwerte empfangen",
+        "info": "",
+        "x": 190,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "01c5d08ed9849412",
+        "type": "comment",
+        "z": "9e07e09866673d2d",
+        "name": "Logik",
+        "info": "",
+        "x": 130,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "6de6c73360761a5d",
+        "type": "comment",
+        "z": "9e07e09866673d2d",
+        "name": "API",
+        "info": "",
+        "x": 130,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "18b39ce228a3df1d",
+        "type": "inject",
+        "z": "9e07e09866673d2d",
+        "name": "Test: sunny",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "sunny",
+        "payloadType": "str",
+        "x": 890,
+        "y": 140,
+        "wires": [
+            [
+                "7defe7692d9d84ae"
+            ]
+        ]
+    },
+    {
+        "id": "806866fbe944ef53",
+        "type": "inject",
+        "z": "9e07e09866673d2d",
+        "name": "Test: light rain",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "light rain",
+        "payloadType": "str",
+        "x": 890,
+        "y": 220,
+        "wires": [
+            [
+                "7defe7692d9d84ae"
+            ]
+        ]
+    },
+    {
+        "id": "ab070cfc66a991c9",
+        "type": "inject",
+        "z": "9e07e09866673d2d",
+        "name": "Test: heavy rain",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "heavy rain",
+        "payloadType": "str",
+        "x": 900,
+        "y": 260,
+        "wires": [
+            [
+                "7defe7692d9d84ae"
+            ]
+        ]
+    },
+    {
+        "id": "ebbc54eae2b9d062",
+        "type": "inject",
+        "z": "9e07e09866673d2d",
+        "name": "Test: thunder",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "thunder",
+        "payloadType": "str",
+        "x": 890,
+        "y": 300,
+        "wires": [
+            [
+                "7defe7692d9d84ae"
+            ]
+        ]
+    },
+    {
+        "id": "df08d4d46b178640",
+        "type": "inject",
+        "z": "9e07e09866673d2d",
+        "name": "Test: snow",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "snow",
+        "payloadType": "str",
+        "x": 880,
+        "y": 340,
+        "wires": [
+            [
+                "7defe7692d9d84ae"
+            ]
+        ]
+    },
+    {
+        "id": "aae1745737b07349",
+        "type": "inject",
+        "z": "9e07e09866673d2d",
+        "name": "Test: cloudy",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "cloudy",
+        "payloadType": "str",
+        "x": 890,
+        "y": 180,
+        "wires": [
+            [
+                "7defe7692d9d84ae"
+            ]
+        ]
+    },
+    {
+        "id": "7defe7692d9d84ae",
+        "type": "function",
+        "z": "9e07e09866673d2d",
+        "name": "SET FLOWVARIABLE",
+        "func": "flow.set(\"fakeWeatherState\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1e0568e53fb1348b",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
