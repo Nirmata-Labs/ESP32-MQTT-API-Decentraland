@@ -10,17 +10,21 @@ You can find the decentraland implementation here: [Decentraland Weather Simulat
 
 1. Connect the ESP32 to the rain sensor, brightness sensor, and DHT11 sensor according to the pin configurations mentioned in the code.
 
-2. Flash the ESP32 with the provided code using the Arduino IDE or any other suitable programming tool.
+   ![Heavy Rain Scene](images/ESP-Schematics.png)
 
-3. Configure the MQTT server settings in the code to match your setup.
+3. Flash the ESP32 with the provided code using the Arduino IDE or any other suitable programming tool.
 
-4. Set up and configure Node-RED on a server to receive the MQTT messages and calculate the weather state.
+4. Configure the MQTT server settings in the code to match your setup.
 
-5. Deploy the Node-RED flow provided in this repository. Adjust it as necessary based on your specific sensor calculations and desired response format.
+5. Set up and configure Node-RED on a server to receive the MQTT messages and calculate the weather state.
 
-6. Ensure that the decentraland instance has access to the Node-RED server and is able to make HTTP GET requests.
+6. Deploy the Node-RED flow provided in this repository. Adjust it as necessary based on your specific sensor calculations and desired response format.
 
-7. Modify the decentraland instance code to make an HTTP GET request to the Node-RED server and retrieve the weather state.
+   ![Heavy Rain Scene](images/Node-Red-flow.png)
+
+8. Ensure that the decentraland instance has access to the Node-RED server and is able to make HTTP GET requests.
+
+9. Modify the decentraland instance code to make an HTTP GET request to the Node-RED server and retrieve the weather state.
 
 
 ## Repository Contents
